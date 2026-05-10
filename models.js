@@ -1,6 +1,6 @@
 const MODELS = {
   1: {
-    name: 'Gemma',
+    name: 'Gemma 4',
     description: 'A versatile model for general tasks.',
     capabilities: ['text generation', 'code generation', 'reasoning'],
     id: 'google/gemma-4-26b-a4b-it',
@@ -12,15 +12,16 @@ const MODELS = {
     id: 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free',
   },
   3: {
-    name: 'Ling 2.6',
+    name: 'Qwen Coder',
     description:
-      'Ling-2.6-1T is an instant (instruct) model from inclusionAI and the company’s trillion-parameter flagship, designed for real-world agents that require fast execution and high efficiency at scale. It uses a “fast...","context_length":262144,"architectur',
+      'Qwen Coder is a model from inclusionAI optimized for coding tasks, offering fast execution and high efficiency at scale.',
     capabilities: [
-      'fast execution',
-      'high efficiency at scale',
-      'suitable for real-world agents',
+      'code generation',
+      'code understanding',
+      'code completion',
+      'multi-language support',
     ],
-    id: 'inclusionai/ling-2.6-1t:free',
+    id: 'qwen/qwen3-coder:free',
   },
   4: {
     name: 'Openrouter Free',
@@ -28,6 +29,20 @@ const MODELS = {
       'The simplest way to get free inference. openrouter/free is a router that selects free models at random from the models available on OpenRoute',
     capabilities: ['access to a variety of free models'],
     id: 'openrouter/free',
+  },
+  5: {
+    name: 'OpenAI: gpt-oss-120b',
+    description: 'A model optimized for general tasks.',
+    capabilities: ['text generation', 'reasoning, agentic and general-purpose tasks'],
+    id: 'openai/gpt-oss-120b',
+  },
+
+  6: {
+    name: 'Laguna M.1',
+    description:
+      'Designed for agentic coding workflows, with strong reasoning and code generation capabilities.',
+    capabilities: ['agentic coding', 'reasoning', 'code generation'],
+    id: 'poolside/laguna-m.1:free',
   },
 };
 
