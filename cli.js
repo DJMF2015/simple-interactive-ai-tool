@@ -4,80 +4,88 @@ const chalk = require('chalk');
 const { formatResponse } = require('./clean');
 const { loadFile, rl } = require('./cli_setup');
 const { askLLM } = require('./llm');
+const { loadSession, clearSession } = require('./sessionStore');
 const { showModels, selectModel } = require('./model_select');
-const { MODELS } = require('./models');
-
-async function normalPromptMode() {
-  const prompt = await ask(chalk.yellow('Enter your question or command: '));
-  if (prompt.toLowerCase() === 'back') {
-    return;
-  }
-  const response = await askLLM(prompt);
-
-  if (response) {
-    console.log(chalk.green('\n🧠 AI response:\n'));
-    console.log(formatResponse(response));
-  }
-}
-
-async function fileMode() {
-  const path = await ask(chalk.yellow('\nEnter file path: '));
-  const fileContent = await loadFile(path);
-
-  if (!fileContent) {
-    console.log(chalk.red('❌ Could not read file'));
-    return;
-  }
-  console.log(chalk.green('\n✅ File loaded successfully.\n'));
-
-  while (true) {
-    const question = await ask(
-      chalk.yellow('Enter your question about the file (or type "exit" to quit): '),
-    );
-
-    if (question.toLowerCase() === 'back') {
-      return;
-    }
-    const prompt = `
-FILE CONTENT:
--------------------
-${fileContent}
--------------------
-
-QUESTION:
-${question}
-`;
-    const response = await askLLM(prompt);
-
-    console.log(chalk.green('\n🧠 Response:\n'));
-    console.log(response + '\n');
-  }
-}
+const memory = require('./memory');
 
 function ask(question) {
   return new Promise((resolve) => rl.question(question, resolve));
 }
 
+async function normalPromptMode() {
+  const prompt = await ask(chalk.yellow('Enter your question or command: '));
+  console.log(chalk.green('\n✅ Sending to LLM...Thinking...\n'));
+  if (prompt.toLowerCase() === 'back') {
+    return;
+  }
+
+  const response = await askLLM(prompt);
+  console.log(chalk.green('\n🧠 Response:\n'));
+  console.log(formatResponse(response) + '\n');
+}
+
+async function fileMode() {
+  const path = await ask(chalk.yellow('\nEnter file path: '));
+  const fileContent = await await loadFile(path);
+
+  if (!fileContent) {
+    console.log(chalk.red('❌ Could not read file'));
+    return;
+  }
+  memory.setFile(fileContent, path);
+  console.log(chalk.green('\n✅ File loaded.\n'));
+}
+
 async function mainMenu() {
+  const session = loadSession();
+
+  if (session && session.messages) {
+    console.log(chalk.yellow('Previous session found, loading messages and summary...'));
+
+    const answer = await new Promise((resolve) =>
+      rl.question(chalk.yellow('Load previous session? (y/n): '), resolve),
+    );
+
+    if (answer.toLowerCase() === 'y') {
+      memory.initialiseSession();
+    } else {
+      console.log(chalk.yellow('Starting new session...'));
+      clearSession();
+    }
+  }
   while (true) {
     console.log(chalk.cyan('\n🤖 AI CLI TOOL\n'));
     console.log('1. Ask a normal question');
     console.log('2. Analyse a file');
     console.log('3. Change model');
-    console.log('4. Exit');
+    console.log('4. Clear memory');
+    console.log('5. Exit');
 
     const choice = await ask(chalk.yellow('\nChoose option: '));
-    if (choice === '1') await normalPromptMode();
-    else if (choice === '2') await fileMode();
-    else if (choice === '3') {
-      showModels();
-      const model = await ask('Choose model number: ');
-      selectModel(Number(model));
-    } else if (choice === '4') {
-      rl.close();
-      process.exit(0);
-    } else {
-      console.log(chalk.red('Invalid choice'));
+
+    switch (choice) {
+      case '1':
+        await normalPromptMode();
+        break;
+      case '2':
+        await fileMode();
+        break;
+      case '3':
+        showModels();
+        const model = await ask(chalk.yellow('Choose model number: '));
+        selectModel(Number(model));
+        break;
+      case '4':
+        memory.clearMemory();
+        clearSession();
+        console.log(chalk.green('✅ Memory cleared\n'));
+        break;
+      case '5':
+        rl.close();
+        console.log(chalk.green('Goodbye!'));
+        process.exit(0);
+      default:
+        console.log(chalk.red('Invalid choice'));
     }
   }
 }
