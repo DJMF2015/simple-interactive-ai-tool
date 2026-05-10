@@ -2,7 +2,7 @@ const chalk = require('chalk');
 
 function formatResponse(text) {
   return text
-    .split('\n')
+    .split('\n') //
     .map((line) => {
       const trimmed = line.trim();
 
