@@ -24,6 +24,12 @@ function selectModel(choice) {
   }
   setModel(selected);
   console.log(chalk.green(`\n✅ Switched to ${selected.name}\n`));
+  console.log(
+    chalk.yellow(
+      `Model details:\nName: ${selected.name}\nDescription: ${selected.description}\n
+    `,
+    ),
+  );
 }
 
 //------------------ STARTUP MODEL SELECTION -------------------------------->
