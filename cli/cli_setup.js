@@ -4,7 +4,7 @@ const fs = require('fs');
 const chalk = require('chalk');
 const memory = require('../services/memory');
 const pathModule = require('path');
-const AppError = require('../utils/errorHandler');
+const AppError = require('../errors/AppError');
 const FileError = require('../errors/FileError');
 // ---------------- SAFETY CHECK ----------------
 function checkApiKey() {
