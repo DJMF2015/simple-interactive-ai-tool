@@ -5,7 +5,7 @@ const { API_URL, CURRENT_MODEL, getCurrentModel } = require('../utils/llmConfig'
 const { summariseHistory, buildContext } = require('./contextEngine');
 const { saveSession } = require('../services/sessionStore');
 const memory = require('../services/memory');
-const errorHandler = require('../utils/errorHandler');
+const error = require('../utils/errorHandler');
 const ApiError = require('../errors/ApiError');
 
 async function askLLM(userInput) {
@@ -45,7 +45,7 @@ async function askLLM(userInput) {
     return reply;
   } catch (err) {
     if (err) {
-      errorHandler.handleError(err, 'LLM API');
+      error.handleError(err, 'LLM API');
       return 'An error occurred while communicating with the AI.';
     }
   }
