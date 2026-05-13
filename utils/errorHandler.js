@@ -23,13 +23,4 @@ function handleError(err, context = 'Application') {
   }
 }
 
-// class AppError extends Error {
-//   constructor(msg = 'Something went wrong', statusCode = 400, data = {}) {
-//     super(msg);
-//     this.statusCode = statusCode;
-//     this.data = data;
-//     Error.captureStackTrace(this, this.constructor);
-//   }
-// }
-
-module.exports = AppError;
+module.exports = handleError;
