@@ -25,7 +25,8 @@ function formatResponse(text) {
 
       if (
         trimmed.toLowerCase().includes('error') ||
-        trimmed.toLowerCase().includes('warning')
+        trimmed.toLowerCase().includes('warning') ||
+        trimmed.toLowerCase().includes('important')
       ) {
         return chalk.red(line);
       }

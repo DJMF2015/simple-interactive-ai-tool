@@ -1,7 +1,7 @@
 const chalk = require('chalk');
-const { rl } = require('./cli_setup');
+const { rl } = require('../cli/cli_setup');
 const { MODELS } = require('./models');
-const { setModel } = require('./llm');
+const { setModel } = require('../utils/llmConfig');
 let CURRENT_MODEL = MODELS[1];
 
 // ---------------- MODEL SELECTION ----------------
@@ -24,6 +24,12 @@ function selectModel(choice) {
   }
   setModel(selected);
   console.log(chalk.green(`\n✅ Switched to ${selected.name}\n`));
+  console.log(
+    chalk.yellow(
+      `Model details:\nName: ${selected.name}\nDescription: ${selected.description}\n
+    `,
+    ),
+  );
 }
 
 //------------------ STARTUP MODEL SELECTION -------------------------------->
