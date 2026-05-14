@@ -1,10 +1,6 @@
 const chalk = require('chalk');
 
 function formatResponse(text) {
-  if (typeof text !== 'string') {
-    return chalk.red('Error: Response is not a string');
-  }
-
   return text
     .split('\n')
     .map((line) => {
