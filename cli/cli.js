@@ -1,5 +1,4 @@
 require('dotenv').config();
-
 const chalk = require('chalk');
 const { formatResponse } = require('../utils/clean');
 const { loadFile, rl } = require('./cli_setup');

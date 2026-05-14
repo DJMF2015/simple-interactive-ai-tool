@@ -16,7 +16,7 @@ async function askLLM(userInput) {
   memory.addMessage('user', userInput);
 
   const messages = buildContext(userInput);
-  console.log(chalk.blue('\n💬 Sending to LLM with context:\n'), messages);
+  console.log(chalk.blue('\n💬 Sending to LLM with context:\n'));
   try {
     const res = await axios.post(
       API_URL,
@@ -44,10 +44,8 @@ async function askLLM(userInput) {
     saveSession(memory.getMessages(), getCurrentModel().id, memory.getSummary());
     return reply;
   } catch (err) {
-    if (err) {
-      error.handleError(err, 'LLM API');
-      return 'An error occurred while communicating with the AI.';
-    }
+    console.error(err);
+    console.error(err.stack);
   }
 }
 
