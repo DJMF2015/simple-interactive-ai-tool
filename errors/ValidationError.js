@@ -1,6 +1,6 @@
-const AppError = require('../utils/errorHandler');
+const AppError = require('./AppError');
 
-class ValidationError extends Error {
+class ValidationError extends AppError {
   constructor(message = 'Validation failed', data = {}) {
     super(message, 400, 'VALIDATION_ERROR', data);
   }

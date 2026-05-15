@@ -3,6 +3,8 @@ const chalk = require('chalk');
 const axios = require('axios');
 const { MODELS } = require('../models/models');
 const { API_URL, CURRENT_MODEL } = require('../utils/llmConfig');
+const validate_error = require('../utils/errorHandler');
+const ApiError = require('../errors/ApiError');
 
 /**
  *
@@ -47,6 +49,13 @@ function buildContext(userInput) {
   return context;
 }
 
+/**
+ * Summarises conversation history by sending to LLM.
+ * On error, logs warning but allows application to continue with existing summary.
+ *
+ * @throws Does not throw - errors are handled internally with user feedback
+ * @returns {Promise<void>}
+ */
 async function summariseHistory() {
   const messagesToSummarise = memory.getMessages();
   const existingSummary = memory.getSummary();
@@ -78,13 +87,17 @@ async function summariseHistory() {
       },
     );
 
-    const newSummary = resp.data.choices[0].message.content;
+    validate_error.validateResponse(
+      resp,
+      'data.choices.0.message.content',
+      'Summarisation',
+    );
     memory.replaceWithSummary(newSummary);
   } catch (err) {
-    console.log(chalk.red('\nError during summarisation\n'));
-
-    console.log(err.response?.data || err.message || err);
+    if (err instanceof ApiError) {
+      console.log(chalk.yellow('\n⚠️  Warning: Could not update summary'));
+      console.log(chalk.yellow(`Reason: ${err.message}`));
+    }
   }
 }
-
 module.exports = { buildContext, summariseHistory };

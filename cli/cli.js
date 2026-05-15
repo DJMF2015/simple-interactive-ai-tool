@@ -72,12 +72,16 @@ async function fileMode() {
         }, 'Prompt Mode');
         break;
       case '2':
-        await fileMode();
+        await safeExecute(async () => {
+          await fileMode();
+        }, 'File Mode');
         break;
       case '3':
         showModels();
         const model = await ask(chalk.yellow('Choose model number: '));
-        selectModel(Number(model));
+        await safeExecute(async () => {
+          selectModel(Number(model));
+        }, 'Select model mode');
         break;
       case '4':
         memory.clearMemory();

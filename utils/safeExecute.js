@@ -1,4 +1,4 @@
-const handleError = require('./errorHandler');
+const error = require('../utils/errorHandler');
 
 /**
  * Executes a function safely, handling any errors that may occur.
@@ -9,8 +9,8 @@ const handleError = require('./errorHandler');
 async function safeExecute(fn, context = 'Operation') {
   try {
     return await fn();
-  } catch (error) {
-    handleError(error, context);
+  } catch (err) {
+    error.handleError(err, context);
     return null;
   }
 }
