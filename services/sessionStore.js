@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const { AppError } = require('../utils/errorHandler');
 const SessionError = require('../errors/SessionError');
+const errors = require('../utils/errorHandler');
 
 const SESSION_FILE = path.join(__dirname, '../data/session.json');
 
@@ -28,8 +28,11 @@ function loadSession() {
     const raw = fs.readFileSync(SESSION_FILE);
     return JSON.parse(raw);
   } catch (err) {
-    console.log('Error loading session:', err);
-    throw new SessionError('Failed to load session', { details: err.message });
+    const sessionError = new SessionError('Failed to load session', {
+      details: err.message,
+      filePath: SESSION_FILE,
+    });
+    errors.handleError(err, 'Error occured during file loading');
     return null;
   }
 }
