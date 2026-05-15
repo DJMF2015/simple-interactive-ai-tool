@@ -1,4 +1,4 @@
-const AppError = require('../utils/errorHandler');
+const AppError = require('./AppError');
 
 class MemoryError extends Error {
   constructor(message = 'Memory operaton failed', data = {}) {

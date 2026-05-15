@@ -1,4 +1,4 @@
-const AppError = require('../utils/errorHandler');
+const AppError = require('./AppError');
 
 class SessionError extends Error {
   constructor(message = 'Session opertion failed', data = {}) {

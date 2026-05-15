@@ -7,12 +7,12 @@ function handleError(err, context = 'Application') {
     console.log(chalk.red(`Message: ${err.message}`));
 
     if (Object.keys(err.data).length > 0) {
-      console.log(chalk, yellow(`Additional Data: ${JSON.stringify(err.data)}`));
+      console.log(chalk.yellow(`Additional Data: ${JSON.stringify(err.data)}`));
     }
     return;
   }
 
-  if (err.reponse) {
+  if (err.response) {
     console.log(chalk.red(`Status: ${err.response.status}`));
     console.log(
       chalk.red(

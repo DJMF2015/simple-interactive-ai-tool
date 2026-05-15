@@ -1,4 +1,4 @@
-const AppError = require('../utils/errorHandler');
+const AppError = require('./AppError');
 
 class ApiError extends AppError {
   constructor(message = 'API request failed', data = {}) {
