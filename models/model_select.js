@@ -2,6 +2,9 @@ const chalk = require('chalk');
 const { rl } = require('../cli/cli_setup');
 const { MODELS } = require('./models');
 const { setModel } = require('../utils/llmConfig');
+const ValidationError = require('../errors/ValidationError');
+const error = require('../utils/errorHandler');
+
 let CURRENT_MODEL = MODELS[1];
 
 // ---------------- MODEL SELECTION ----------------
@@ -19,8 +22,12 @@ function showModels() {
 
 function selectModel(choice) {
   const selected = MODELS[choice];
+
   if (!selected) {
-    console.log(chalk.red('❌ Invalid model.'));
+    throw new ValidationError('❌ Invalid model. Choose again', {
+      choice,
+      availableModels: Object.keys(MODELS),
+    });
   }
   setModel(selected);
   console.log(chalk.green(`\n✅ Switched to ${selected.name}\n`));
@@ -30,6 +37,7 @@ function selectModel(choice) {
     `,
     ),
   );
+  return true;
 }
 
 //------------------ STARTUP MODEL SELECTION -------------------------------->
